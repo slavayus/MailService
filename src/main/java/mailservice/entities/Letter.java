@@ -2,8 +2,10 @@ package mailservice.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -11,9 +13,10 @@ import javax.persistence.*;
 @Table(name = "LETTER")
 public class Letter {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
-    private Long id;
+    @Column(columnDefinition = "uuid", name = "LETTER_UUID")
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    private UUID uuid;
 
     @Column(name = "TO")
     private String to;

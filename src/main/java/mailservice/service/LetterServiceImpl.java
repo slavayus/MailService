@@ -29,8 +29,8 @@ public class LetterServiceImpl implements LetterService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Letter> findById(Long id) {
-        return letterRepository.findById(id);
+    public Optional<Letter> findByUUID(UUID uuid) {
+        return letterRepository.findById(uuid);
     }
 
     @Override

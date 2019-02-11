@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
@@ -52,12 +53,12 @@ public class NotificationController {
         }
         letterService.save(letter);
 
-        return ok(new Response<>(letter.getId()));
+        return ok(new Response<>(letter.getUuid()));
     }
 
-    @GetMapping("/send/{id}")
-    public ResponseEntity<?> notificationStatus(@PathVariable long id) {
-        return letterService.findById(id).map(l -> ok(new Response<>(l.getStatus()))).orElse(badRequest().body(new Response<>("There is no such letter")));
+    @GetMapping("/send/{uuid}")
+    public ResponseEntity<?> notificationStatus(@PathVariable UUID uuid) {
+        return letterService.findByUUID(uuid).map(l -> ok(new Response<>(l.getStatus()))).orElse(badRequest().body(new Response<>("There is no such letter")));
     }
 
     @GetMapping

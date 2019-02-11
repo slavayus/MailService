@@ -4,11 +4,12 @@ import mailservice.entities.Letter;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface LetterService {
     void save(Letter letter);
 
-    Optional<Letter> findById(Long id);
+    Optional<Letter> findByUUID(UUID uuid);
 
     List<Letter> findAll();
 }
