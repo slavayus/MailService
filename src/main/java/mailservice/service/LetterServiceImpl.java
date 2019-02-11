@@ -1,15 +1,20 @@
 package mailservice.service;
 
+import mailservice.controllers.exceptions.LetterNotFoundException;
+import mailservice.controllers.model.Message;
+import mailservice.controllers.model.Response;
 import mailservice.entities.Letter;
 import mailservice.repository.LetterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -17,20 +22,11 @@ import java.util.UUID;
 @Service
 public class LetterServiceImpl implements LetterService {
     private final LetterRepository letterRepository;
+    private final JavaMailSender emailSender;
 
-    public LetterServiceImpl(@Autowired LetterRepository letterRepository) {
+    public LetterServiceImpl(@Autowired LetterRepository letterRepository, JavaMailSender emailSender) {
         this.letterRepository = letterRepository;
-    }
-
-    @Override
-    public void save(Letter letter) {
-        letterRepository.save(letter);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<Letter> findByUUID(UUID uuid) {
-        return letterRepository.findById(uuid);
+        this.emailSender = emailSender;
     }
 
     @Override
@@ -39,5 +35,30 @@ public class LetterServiceImpl implements LetterService {
         List<Letter> letters = new LinkedList<>();
         letterRepository.findAll().forEach(letters::add);
         return letters;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Response<String> onNotificationStatus(UUID uuid) {
+        return letterRepository.findById(uuid).map(l -> new Response<>(l.getStatus())).orElseThrow(LetterNotFoundException::new);
+    }
+
+    @Override
+    public Response<UUID> onSendNotification(Message message) {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(message.getTo());
+        mailMessage.setSubject(message.getSubject());
+        mailMessage.setText(message.getText());
+
+        Letter letter = new Letter(message.getTo(), message.getSubject(), message.getText());
+        try {
+            emailSender.send(mailMessage);
+            letter.setStatus("SUCCESS");
+        } catch (MailException e) {
+            letter.setStatus(e.getLocalizedMessage());
+        }
+
+        letterRepository.save(letter);
+        return new Response<>(letter.getUuid());
     }
 }

@@ -5,10 +5,8 @@ import mailservice.controllers.model.Response;
 import mailservice.entities.Letter;
 import mailservice.service.LetterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,12 +22,10 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("/notification")
 public class NotificationController {
     private final LetterService letterService;
-    private final JavaMailSender emailSender;
 
     @Autowired
-    public NotificationController(LetterService letterService, JavaMailSender emailSender) {
+    public NotificationController(LetterService letterService) {
         this.letterService = letterService;
-        this.emailSender = emailSender;
     }
 
     @PostMapping("/send")
@@ -39,26 +35,17 @@ public class NotificationController {
             bindingResult.getAllErrors().forEach(e -> errors.add(e.getDefaultMessage()));
             return badRequest().body(new Response<>(errors));
         }
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(message.getTo());
-        mailMessage.setSubject(message.getSubject());
-        mailMessage.setText(message.getText());
-
-        Letter letter = new Letter(message.getTo(), message.getSubject(), message.getText());
-        try {
-            emailSender.send(mailMessage);
-            letter.setStatus("SUCCESS");
-        } catch (MailException e) {
-            letter.setStatus(e.getLocalizedMessage());
-        }
-        letterService.save(letter);
-
-        return ok(new Response<>(letter.getUuid()));
+        return ok(letterService.onSendNotification(message));
     }
 
     @GetMapping("/send/{uuid}")
     public ResponseEntity<?> notificationStatus(@PathVariable UUID uuid) {
-        return letterService.findByUUID(uuid).map(l -> ok(new Response<>(l.getStatus()))).orElse(badRequest().body(new Response<>("There is no such letter")));
+        return ok(letterService.onNotificationStatus(uuid));
+    }
+
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "PathVariable must be UUID")
+    public void handleIllegalArgumentException() {
     }
 
     @GetMapping
