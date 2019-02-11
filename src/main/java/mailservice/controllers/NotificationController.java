@@ -5,12 +5,19 @@ import mailservice.controllers.model.Response;
 import mailservice.entities.Letter;
 import mailservice.service.LetterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.LinkedList;
 import java.util.List;
+
+import static org.springframework.http.ResponseEntity.badRequest;
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping("/notification")
@@ -25,7 +32,12 @@ public class NotificationController {
     }
 
     @PostMapping("/send")
-    public Response<Long> sendNotification(@RequestBody Message message) {
+    public ResponseEntity<?> sendNotification(@Valid @RequestBody Message message, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            LinkedList<String> errors = new LinkedList<>();
+            bindingResult.getAllErrors().forEach(e -> errors.add(e.getDefaultMessage()));
+            return badRequest().body(new Response<>(errors));
+        }
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(message.getTo());
         mailMessage.setSubject(message.getSubject());
@@ -40,7 +52,7 @@ public class NotificationController {
         }
         letterService.save(letter);
 
-        return new Response<>(letter.getId());
+        return ok(new Response<>(letter.getId()));
     }
 
     @GetMapping("/send/{id}")

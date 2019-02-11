@@ -23,4 +23,5 @@ dependencies {
     runtime 'com.h2database:h2:1.4.197'
     compile 'org.hibernate:hibernate-entitymanager:5.4.0.Final'
     compile 'org.springframework.data:spring-data-jpa:2.1.4.RELEASE'
+    compile group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.0.14.Final'
 }
