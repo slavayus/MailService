@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -28,8 +29,8 @@ public class LetterServiceImpl implements LetterService {
 
     @Override
     @Transactional(readOnly = true)
-    public Letter findByUUID(UUID uuid) {
-        return null;
+    public Optional<Letter> findById(Long id) {
+        return letterRepository.findById(id);
     }
 
     @Override

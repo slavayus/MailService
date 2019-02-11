@@ -1,6 +1,7 @@
 package mailservice.controllers;
 
 import mailservice.controllers.model.Message;
+import mailservice.controllers.model.Response;
 import mailservice.entities.Letter;
 import mailservice.service.LetterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +35,16 @@ public class NotificationController {
         Letter letter = new Letter(message.getTo(), message.getSubject(), message.getText(), "SUCCESS");
         letterService.save(letter);
 
-        return "Letter uuid " + letter.getId();
+        return "Letter id: " + letter.getId();
     }
 
-    @PostMapping("/send/{uuid}")
-    public String notificationStatus(@PathVariable String uuid) {
-        return "email sent";
+    @GetMapping("/send/{id}")
+    public Response<String> notificationStatus(@PathVariable long id) {
+        return new Response<>(letterService.findById(id).map(Letter::getStatus).orElse("There is no such letter"));
+    }
+
+    @GetMapping
+    public List<Letter> lettersList() {
+        return letterService.findAll();
     }
 }
