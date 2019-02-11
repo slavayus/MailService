@@ -56,8 +56,8 @@ public class NotificationController {
     }
 
     @GetMapping("/send/{id}")
-    public Response<String> notificationStatus(@PathVariable long id) {
-        return new Response<>(letterService.findById(id).map(Letter::getStatus).orElse("There is no such letter"));
+    public ResponseEntity<?> notificationStatus(@PathVariable long id) {
+        return letterService.findById(id).map(l -> ok(new Response<>(l.getStatus()))).orElse(badRequest().body(new Response<>("There is no such letter")));
     }
 
     @GetMapping
