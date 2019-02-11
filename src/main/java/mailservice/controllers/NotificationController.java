@@ -5,6 +5,7 @@ import mailservice.controllers.model.Response;
 import mailservice.entities.Letter;
 import mailservice.service.LetterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
@@ -24,18 +25,22 @@ public class NotificationController {
     }
 
     @PostMapping("/send")
-    public String sendNotification(@RequestBody Message message) {
+    public Response<Long> sendNotification(@RequestBody Message message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(message.getTo());
         mailMessage.setSubject(message.getSubject());
         mailMessage.setText(message.getText());
 
-        emailSender.send(mailMessage);
-
-        Letter letter = new Letter(message.getTo(), message.getSubject(), message.getText(), "SUCCESS");
+        Letter letter = new Letter(message.getTo(), message.getSubject(), message.getText());
+        try {
+            emailSender.send(mailMessage);
+            letter.setStatus("SUCCESS");
+        } catch (MailException e) {
+            letter.setStatus(e.getLocalizedMessage());
+        }
         letterService.save(letter);
 
-        return "Letter id: " + letter.getId();
+        return new Response<>(letter.getId());
     }
 
     @GetMapping("/send/{id}")

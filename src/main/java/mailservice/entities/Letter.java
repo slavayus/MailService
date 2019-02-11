@@ -28,11 +28,9 @@ public class Letter {
     private String status;
 
 
-    public Letter(String to, String subject, String text, String status) {
+    public Letter(String to, String subject, String text) {
         this.to = to;
         this.subject = subject;
         this.text = text;
-        this.status = status;
     }
-
 }
