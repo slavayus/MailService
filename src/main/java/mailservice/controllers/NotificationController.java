@@ -1,13 +1,13 @@
 package mailservice.controllers;
 
+import mailservice.controllers.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/notification")
 public class NotificationController {
     private final JavaMailSender emailSender;
 
@@ -16,19 +16,19 @@ public class NotificationController {
         this.emailSender = emailSender;
     }
 
-    @PostMapping("/notification/send")
-    public String sendNotification() {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo("slavayus@gmail.com");
-        message.setSubject("YEEE");
-        message.setText("YYYY");
+    @PostMapping("/send")
+    public String sendNotification(@RequestBody Message message) {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(message.getTo());
+        mailMessage.setSubject(message.getSubject());
+        mailMessage.setText(message.getText());
 
-        emailSender.send(message);
+        emailSender.send(mailMessage);
 
         return "email sent";
     }
 
-    @PostMapping("/notification/send/{uuid}")
+    @PostMapping("/send/{uuid}")
     public String notificationStatus(@PathVariable String uuid) {
         return "email sent";
     }
