@@ -16,4 +16,5 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.2.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot', version: '2.1.2.RELEASE'
     compile group: 'org.springframework', name: 'spring-webmvc', version: '5.1.4.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.1.2.RELEASE'
 }
