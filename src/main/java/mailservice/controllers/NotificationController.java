@@ -1,18 +1,24 @@
 package mailservice.controllers;
 
 import mailservice.controllers.model.Message;
+import mailservice.entities.Letter;
+import mailservice.service.LetterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/notification")
 public class NotificationController {
+    private final LetterService letterService;
     private final JavaMailSender emailSender;
 
     @Autowired
-    public NotificationController(JavaMailSender emailSender) {
+    public NotificationController(LetterService letterService, JavaMailSender emailSender) {
+        this.letterService = letterService;
         this.emailSender = emailSender;
     }
 
@@ -25,7 +31,10 @@ public class NotificationController {
 
         emailSender.send(mailMessage);
 
-        return "email sent";
+        Letter letter = new Letter(message.getTo(), message.getSubject(), message.getText(), "SUCCESS");
+        letterService.save(letter);
+
+        return "Letter uuid " + letter.getId();
     }
 
     @PostMapping("/send/{uuid}")

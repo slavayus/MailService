@@ -20,4 +20,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.1.2.RELEASE'
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
     apt 'org.projectlombok:lombok:1.18.4'
+    runtime 'com.h2database:h2:1.4.197'
+    compile 'org.hibernate:hibernate-entitymanager:5.4.0.Final'
+    compile 'org.springframework.data:spring-data-jpa:2.1.4.RELEASE'
 }
