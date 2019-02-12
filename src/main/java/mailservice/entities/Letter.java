@@ -1,5 +1,7 @@
 package mailservice.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -8,9 +10,11 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Data
-@NoArgsConstructor
 @Entity
 @Table(name = "LETTER")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Letter {
     @Id
     @Column(columnDefinition = "uuid", name = "LETTER_UUID")
@@ -29,11 +33,4 @@ public class Letter {
 
     @Column(name = "STATUS")
     private String status;
-
-
-    public Letter(String to, String subject, String text) {
-        this.to = to;
-        this.subject = subject;
-        this.text = text;
-    }
 }

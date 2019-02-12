@@ -25,9 +25,7 @@ public class LetterRepositoryTest {
 
     @Test
     public void findAllTestOne() {
-        Letter alex = new Letter("AlexTo", "AlexSubject", "AlexText");
-        alex.setStatus("SUCCESS");
-
+        Letter alex = Letter.builder().to("AlexTo").subject("AlexSubject").text("AlexText").status("SUCCESS").build();
         entityManager.persist(alex);
         entityManager.flush();
 
@@ -45,9 +43,9 @@ public class LetterRepositoryTest {
 
     @Test
     public void findAllTestMultiple() {
-        entityManager.persist(new Letter("AlexTo", "AlexSubject", "AlexText"));
-        entityManager.persist(new Letter("AlexTo", "AlexSubject", "AlexText"));
-        entityManager.persist(new Letter("AlexTo", "AlexSubject", "AlexText"));
+        entityManager.persist(Letter.builder().to("AlexTo").subject("AlexSubject").text("AlexText").build());
+        entityManager.persist(Letter.builder().to("AlexTo").subject("AlexSubject").text("AlexText").build());
+        entityManager.persist(Letter.builder().to("AlexTo").subject("AlexSubject").text("AlexText").build());
         entityManager.flush();
 
         Iterable<Letter> found = letterRepository.findAll();
@@ -59,7 +57,7 @@ public class LetterRepositoryTest {
 
     @Test
     public void findByUUIDExists() {
-        Letter alex = new Letter("AlexTo", "AlexSubject", "AlexText");
+        Letter alex = Letter.builder().to("AlexTo").subject("AlexSubject").text("AlexText").build();
         entityManager.persist(alex);
         entityManager.flush();
 
@@ -68,7 +66,7 @@ public class LetterRepositoryTest {
 
     @Test
     public void findByUUIDNonExists() {
-        Letter alex = new Letter("AlexTo", "AlexSubject", "AlexText");
+        Letter alex = Letter.builder().to("AlexTo").subject("AlexSubject").text("AlexText").build();
         entityManager.persist(alex);
         entityManager.flush();
 
@@ -77,7 +75,7 @@ public class LetterRepositoryTest {
 
     @Test
     public void saveTestExists() {
-        Letter alex = new Letter("AlexTo", "AlexSubject", "AlexText");
+        Letter alex = Letter.builder().to("AlexTo").subject("AlexSubject").text("AlexText").build();
         letterRepository.save(alex);
 
         LetterRepository mock = Mockito.mock(LetterRepository.class);
@@ -88,7 +86,7 @@ public class LetterRepositoryTest {
 
     @Test
     public void saveTestNo() {
-        Letter alex = new Letter("AlexTo", "AlexSubject", "AlexText");
+        Letter alex = Letter.builder().to("AlexTo").subject("AlexSubject").text("AlexText").build();
         letterRepository.save(alex);
 
         LetterRepository mock = Mockito.mock(LetterRepository.class);

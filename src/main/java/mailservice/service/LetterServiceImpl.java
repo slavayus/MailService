@@ -21,11 +21,16 @@ import java.util.UUID;
 @Transactional
 @Service
 public class LetterServiceImpl implements LetterService {
-    private final LetterRepository letterRepository;
-    private final JavaMailSender emailSender;
+    private LetterRepository letterRepository;
+    private JavaMailSender emailSender;
 
-    public LetterServiceImpl(@Autowired LetterRepository letterRepository, JavaMailSender emailSender) {
+    @Autowired
+    public void setLetterRepository(LetterRepository letterRepository) {
         this.letterRepository = letterRepository;
+    }
+
+    @Autowired
+    public void setEmailSender(JavaMailSender emailSender) {
         this.emailSender = emailSender;
     }
 
@@ -50,14 +55,15 @@ public class LetterServiceImpl implements LetterService {
         mailMessage.setSubject(message.getSubject());
         mailMessage.setText(message.getText());
 
-        Letter letter = new Letter(message.getTo(), message.getSubject(), message.getText());
+        Letter.LetterBuilder letterBuilder = Letter.builder().to(message.getTo()).subject(message.getSubject()).text(message.getText());
         try {
             emailSender.send(mailMessage);
-            letter.setStatus("SUCCESS");
+            letterBuilder.status("SUCCESS");
         } catch (MailException e) {
-            letter.setStatus(e.getLocalizedMessage());
+            letterBuilder.status(e.getLocalizedMessage());
         }
 
+        Letter letter = letterBuilder.build();
         letterRepository.save(letter);
         return new Response<>(letter.getUuid());
     }
