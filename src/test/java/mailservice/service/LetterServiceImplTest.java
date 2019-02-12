@@ -58,7 +58,7 @@ public class LetterServiceImplTest {
         UUID uuid = UUID.randomUUID();
         Mockito.when(letterRepository.findById(uuid)).thenReturn(Optional.of(letter));
 
-        assertEquals(letterService.onNotificationStatus(uuid), new Response<>("FAIL"));
+        assertEquals(letterService.notificationStatus(uuid), new Response<>("FAIL"));
     }
 
     @Test
@@ -77,6 +77,6 @@ public class LetterServiceImplTest {
 
         Letter letter = Letter.builder().to(message.getTo()).subject(message.getSubject()).text(message.getText()).status("SUCCESS").build();
 
-        assertEquals(letterService.onSendNotification(message), new Response<>(letter.getUuid()));
+        assertEquals(letterService.sendNotification(message), new Response<>(letter.getUuid()));
     }
 }

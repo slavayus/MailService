@@ -50,7 +50,7 @@ public class NotificationControllerTest {
     @Test
     public void notificationStatus_willReturnSuccess() throws Exception {
         UUID uuid = UUID.randomUUID();
-        given(service.onNotificationStatus(uuid)).willReturn(new Response<>("SUCCESS"));
+        given(service.notificationStatus(uuid)).willReturn(new Response<>("SUCCESS"));
         mvc.perform(get("/notification/send/" + uuid)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -60,7 +60,7 @@ public class NotificationControllerTest {
     @Test
     public void notificationStatus_willReturnError() throws Exception {
         UUID uuid = UUID.randomUUID();
-        given(service.onNotificationStatus(uuid)).willThrow(LetterNotFoundException.class);
+        given(service.notificationStatus(uuid)).willThrow(LetterNotFoundException.class);
         mvc.perform(get("/notification/send/" + uuid)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
@@ -100,7 +100,7 @@ public class NotificationControllerTest {
         message.setText("EEEE");
 
         UUID uuid = UUID.randomUUID();
-        given(service.onSendNotification(message)).willReturn(new Response<>(uuid));
+        given(service.sendNotification(message)).willReturn(new Response<>(uuid));
 
         mvc.perform(post("/notification/send")
                 .content(new ObjectMapper().writeValueAsString(message))

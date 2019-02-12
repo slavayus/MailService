@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface LetterService {
     List<Letter> findAll();
 
-    Response<String> onNotificationStatus(UUID uuid);
+    Response<String> notificationStatus(UUID uuid);
 
-    Response<UUID> onSendNotification(Message message);
+    Response<UUID> sendNotification(Message message);
 }

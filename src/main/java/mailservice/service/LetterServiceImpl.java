@@ -44,12 +44,12 @@ public class LetterServiceImpl implements LetterService {
 
     @Override
     @Transactional(readOnly = true)
-    public Response<String> onNotificationStatus(UUID uuid) {
+    public Response<String> notificationStatus(UUID uuid) {
         return letterRepository.findById(uuid).map(l -> new Response<>(l.getStatus())).orElseThrow(LetterNotFoundException::new);
     }
 
     @Override
-    public Response<UUID> onSendNotification(Message message) {
+    public Response<UUID> sendNotification(Message message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(message.getTo());
         mailMessage.setSubject(message.getSubject());

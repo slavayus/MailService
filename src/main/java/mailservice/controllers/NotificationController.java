@@ -41,7 +41,7 @@ public class NotificationController {
             bindingResult.getAllErrors().forEach(e -> errors.add(e.getDefaultMessage()));
             return badRequest().body(new Response<>(errors));
         }
-        return ok(letterService.onSendNotification(message));
+        return ok(letterService.sendNotification(message));
     }
 
     @GetMapping("/send/{uuid}")
@@ -51,7 +51,7 @@ public class NotificationController {
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     })
     public ResponseEntity<?> notificationStatus(@PathVariable UUID uuid) {
-        return ok(letterService.onNotificationStatus(uuid));
+        return ok(letterService.notificationStatus(uuid));
     }
 
     @ExceptionHandler(value = IllegalArgumentException.class)
