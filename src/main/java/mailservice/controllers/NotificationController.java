@@ -37,7 +37,7 @@ public class NotificationController {
     @ApiOperation(value = "Send a new notification", response = Response.class)
     public ResponseEntity<?> sendNotification(@Valid @RequestBody Message message, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            LinkedList<String> errors = new LinkedList<>();
+            List<String> errors = new LinkedList<>();
             bindingResult.getAllErrors().forEach(e -> errors.add(e.getDefaultMessage()));
             return badRequest().body(new Response<>(errors));
         }

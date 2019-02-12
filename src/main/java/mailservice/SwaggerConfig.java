@@ -40,10 +40,10 @@ public class SwaggerConfig implements WebMvcConfigurer {
     private ApiInfo metaData() {
         return new ApiInfoBuilder()
                 .title("Mail Service")
-                .description("\"Spring Boot REST API for Mail\"")
+                .description("Spring Boot REST API for Mail")
                 .version("1.0.0")
                 .license("Apache License Version 2.0")
-                .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0\"")
+                .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
                 .contact(new Contact("Vladislav Iusiumbeli", "http://github.com/slavayus/", "slavayus@gmail.com"))
                 .build();
     }

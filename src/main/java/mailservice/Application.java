@@ -27,7 +27,7 @@ public class Application {
             @Value("${spring.mail.port}") int port,
             @Value("${spring.mail.username}") String username,
             @Value("${spring.mail.password}") String password,
-            @Value("${spring.mail.properties.mail.smtp.auth}") boolean authRequere,
+            @Value("${spring.mail.properties.mail.smtp.auth}") boolean authRequire,
             @Value("${spring.mail.properties.mail.smtp.starttls.enable}") boolean tlsEnable) {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(host);
@@ -37,10 +37,8 @@ public class Application {
         mailSender.setPassword(password);
 
         Properties props = mailSender.getJavaMailProperties();
-//        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.auth", authRequere);
+        props.put("mail.smtp.auth", authRequire);
         props.put("mail.smtp.starttls.enable", tlsEnable);
-//        props.put("mail.debug", "true");
 
         return mailSender;
     }

@@ -14,7 +14,7 @@ public class Message {
     @ApiModelProperty(notes = "The notification subject")
     @Size(max = 200, message = "{validation.subject.message}")
     private String subject;
-    @NotEmpty(message = "{validation.text.message}")
     @ApiModelProperty(notes = "The notification text", required = true)
+    @NotEmpty(message = "{validation.text.message}")
     private String text;
 }

@@ -24,7 +24,7 @@ public class LetterRepositoryTest {
     private LetterRepository letterRepository;
 
     @Test
-    public void findAllTestOne() {
+    public void findAll_withOneLetter_willReturnOneObject() {
         Letter alex = Letter.builder().to("AlexTo").subject("AlexSubject").text("AlexText").status("SUCCESS").build();
         entityManager.persist(alex);
         entityManager.flush();
@@ -42,7 +42,7 @@ public class LetterRepositoryTest {
     }
 
     @Test
-    public void findAllTestMultiple() {
+    public void findAll_withMultipleLetter_willReturnMultipleObject() {
         entityManager.persist(Letter.builder().to("AlexTo").subject("AlexSubject").text("AlexText").build());
         entityManager.persist(Letter.builder().to("AlexTo").subject("AlexSubject").text("AlexText").build());
         entityManager.persist(Letter.builder().to("AlexTo").subject("AlexSubject").text("AlexText").build());
@@ -56,7 +56,7 @@ public class LetterRepositoryTest {
     }
 
     @Test
-    public void findByUUIDExists() {
+    public void findByUUID_withExistUUID_willReturnTrue() {
         Letter alex = Letter.builder().to("AlexTo").subject("AlexSubject").text("AlexText").build();
         entityManager.persist(alex);
         entityManager.flush();
@@ -65,16 +65,16 @@ public class LetterRepositoryTest {
     }
 
     @Test
-    public void findByUUIDNonExists() {
+    public void findByUUID_withExistUUID_willReturnFalse() {
         Letter alex = Letter.builder().to("AlexTo").subject("AlexSubject").text("AlexText").build();
         entityManager.persist(alex);
         entityManager.flush();
 
-        assertFalse(letterRepository.findById(UUID.fromString(alex.getUuid().toString().substring(0, alex.getUuid().toString().length() - 1))).isPresent());
+        assertFalse(letterRepository.findById(UUID.randomUUID()).isPresent());
     }
 
     @Test
-    public void saveTestExists() {
+    public void saveTest_willReturnTrue() {
         Letter alex = Letter.builder().to("AlexTo").subject("AlexSubject").text("AlexText").build();
         letterRepository.save(alex);
 
@@ -85,13 +85,13 @@ public class LetterRepositoryTest {
     }
 
     @Test
-    public void saveTestNo() {
+    public void saveTest_willReturnFalse() {
         Letter alex = Letter.builder().to("AlexTo").subject("AlexSubject").text("AlexText").build();
         letterRepository.save(alex);
 
         LetterRepository mock = Mockito.mock(LetterRepository.class);
         Mockito.when(mock.findById(alex.getUuid())).thenReturn(Optional.of(alex));
 
-        assertFalse(mock.findById(UUID.fromString(alex.getUuid().toString().substring(0, alex.getUuid().toString().length() - 1))).isPresent());
+        assertFalse(mock.findById(UUID.randomUUID()).isPresent());
     }
 }
